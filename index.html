@@ -3,535 +3,346 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FlashRide Fleet Analytics Dashboard</title>
+<title>FlashRide Fleet Analytics</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f4f6f9;
+  --white:#ffffff;
+  --dark:#0f172a;
+  --primary:#1d4ed8;
+  --accent:#059669;
+  --danger:#dc2626;
+  --amber:#d97706;
+  --text:#1e293b;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --card:#ffffff;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
 
-  :root {
-    --bg: #0a0e1a;
-    --surface: #111827;
-    --surface2: #1a2235;
-    --border: #1e2d45;
-    --accent: #00d4aa;
-    --accent2: #3b82f6;
-    --accent3: #f59e0b;
-    --danger: #ef4444;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --card-shadow: 0 4px 24px rgba(0,0,0,0.4);
-  }
+/* NAV */
+nav{
+  background:var(--dark);
+  padding:0 40px;
+  height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  border-bottom:2px solid #1d4ed8;
+}
+.nav-brand{font-family:'Syne',sans-serif;font-size:1.1rem;color:#fff;display:flex;align-items:center;gap:10px;}
+.nav-brand .bolt{background:#1d4ed8;width:26px;height:26px;border-radius:6px;display:grid;place-items:center;font-size:13px;}
+.nav-meta{font-size:0.78rem;color:#94a3b8;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* HERO */
+.hero{
+  background:var(--dark);
+  padding:52px 40px 48px;
+  border-bottom:1px solid #1e293b;
+}
+.hero-inner{max-width:1080px;margin:0 auto;}
+.hero-tag{
+  display:inline-block;background:rgba(29,78,216,0.2);
+  border:1px solid rgba(29,78,216,0.4);color:#93c5fd;
+  font-size:0.75rem;font-weight:600;padding:4px 12px;
+  border-radius:20px;margin-bottom:16px;letter-spacing:0.04em;
+}
+.hero h1{
+  font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:800;color:#f1f5f9;line-height:1.15;margin-bottom:12px;
+}
+.hero h1 em{color:#60a5fa;font-style:normal;}
+.hero p{color:#94a3b8;font-size:0.95rem;line-height:1.7;max-width:600px;margin-bottom:28px;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* FILTERS */
+.filters-wrap{background:var(--dark);padding:0 40px 24px;}
+.filters-inner{max-width:1080px;margin:0 auto;}
+.filters-row{
+  background:#1e293b;border:1px solid #334155;
+  border-radius:12px;padding:14px 20px;
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+}
+.filters-row label{font-size:0.72rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;}
+.filters-row select{
+  background:#0f172a;border:1px solid #334155;color:#e2e8f0;
+  padding:7px 12px;border-radius:8px;font-size:0.82rem;
+  font-family:'Inter',sans-serif;cursor:pointer;outline:none;transition:border-color 0.2s;
+}
+.filters-row select:focus{border-color:#1d4ed8;}
+.btn-reset{
+  background:transparent;border:1px solid #334155;color:#64748b;
+  padding:7px 14px;border-radius:8px;font-size:0.82rem;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all 0.2s;
+}
+.btn-reset:hover{border-color:#60a5fa;color:#60a5fa;}
 
-  /* HEADER */
-  header {
-    background: linear-gradient(135deg, #0a0e1a 0%, #0d1829 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+/* MAIN */
+main{max-width:1080px;margin:0 auto;padding:40px 40px 60px;}
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:48px;}
+.kpi{
+  background:var(--card);border-radius:12px;padding:18px 16px;
+  border:1px solid var(--border);border-top:3px solid transparent;
+}
+.kpi.k1{border-top-color:#1d4ed8;}
+.kpi.k2{border-top-color:#dc2626;}
+.kpi.k3{border-top-color:#d97706;}
+.kpi.k4{border-top-color:#dc2626;}
+.kpi.k5{border-top-color:#059669;}
+.kpi-label{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:8px;}
+.kpi-val{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;line-height:1;}
+.kpi.k1 .kpi-val{color:#1d4ed8;}
+.kpi.k2 .kpi-val{color:#dc2626;}
+.kpi.k3 .kpi-val{color:#d97706;}
+.kpi.k4 .kpi-val{color:#dc2626;}
+.kpi.k5 .kpi-val{color:#059669;}
+.kpi-sub{font-size:0.7rem;color:var(--muted);margin-top:5px;}
 
-  .logo-icon {
-    width: 38px; height: 38px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-  }
+/* STORY CARD */
+.story-card{background:var(--card);border-radius:14px;border:1px solid var(--border);margin-bottom:32px;overflow:hidden;}
+.story-card .chart-area{padding:28px 28px 20px;}
+.story-card .chart-area h3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.story-card .chart-area .chart-sub{font-size:0.78rem;color:var(--muted);margin-bottom:20px;}
+.story-card .story-footer{
+  border-top:1px solid var(--border);
+  padding:16px 28px;
+  display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;
+  background:#fafbfc;
+}
+.story-footer .story-text{font-size:0.84rem;color:#334155;line-height:1.6;}
+.story-footer .story-text strong{color:var(--dark);}
+.story-footer .action-tag{
+  white-space:nowrap;font-size:0.75rem;font-weight:600;
+  padding:6px 12px;border-radius:20px;
+  background:#dbeafe;color:#1d4ed8;
+}
+.story-footer .action-tag.green{background:#d1fae5;color:#065f46;}
+.story-footer .action-tag.red{background:#fee2e2;color:#991b1b;}
+.story-footer .action-tag.amber{background:#fef3c7;color:#92400e;}
 
-  .logo-text {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: -0.5px;
-  }
+/* two-col grid */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;}
+.chart-grid .story-card{margin-bottom:0;}
 
-  .logo-sub {
-    font-size: 0.72rem;
-    color: var(--muted);
-    font-weight: 400;
-  }
+/* step connector */
+.step-connector{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:16px;
+}
+.step-num{
+  background:var(--dark);color:#fff;
+  font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:800;
+  width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center;flex-shrink:0;
+}
+.step-label{font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
+/* flow intro */
+.flow-intro{
+  background:var(--dark);color:#f1f5f9;
+  border-radius:14px;padding:28px 32px;margin-bottom:40px;
+}
+.flow-intro h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:8px;}
+.flow-intro p{font-size:0.88rem;color:#94a3b8;line-height:1.7;max-width:700px;}
+.flow-steps{display:flex;gap:0;margin-top:20px;flex-wrap:wrap;}
+.flow-step{
+  display:flex;align-items:center;gap:8px;
+  background:#1e293b;border:1px solid #334155;
+  padding:8px 14px;border-radius:8px;font-size:0.78rem;color:#e2e8f0;font-weight:500;
+  margin-right:8px;margin-bottom:8px;
+}
+.flow-step .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot-blue{background:#60a5fa;}
+.dot-red{background:#f87171;}
+.dot-amber{background:#fbbf24;}
+.dot-green{background:#34d399;}
 
-  .stat-pill {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 0.78rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+footer{
+  text-align:center;padding:24px 40px;color:var(--muted);
+  font-size:0.75rem;border-top:1px solid var(--border);
+  background:var(--card);
+}
+footer strong{color:var(--dark);}
 
-  .stat-pill span {
-    color: var(--accent);
-    font-weight: 600;
-    font-family: 'Space Mono', monospace;
-  }
-
-  /* FILTERS */
-  .filters-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 32px;
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .filter-label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .filter-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  select {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 7px 12px;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  select:focus { border-color: var(--accent); }
-
-  .btn-reset {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 7px 14px;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
-  }
-
-  .btn-reset:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  /* MAIN */
-  main { padding: 28px 32px; }
-
-  /* KPI CARDS */
-  .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-
-  .kpi-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-
-  .kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 14px 14px 0 0;
-  }
-
-  .kpi-card.green::before { background: var(--accent); }
-  .kpi-card.blue::before  { background: var(--accent2); }
-  .kpi-card.amber::before { background: var(--accent3); }
-  .kpi-card.red::before   { background: var(--danger); }
-  .kpi-card.purple::before { background: #8b5cf6; }
-
-  .kpi-card:hover { transform: translateY(-2px); border-color: #2a3d5a; }
-
-  .kpi-label { font-size: 0.73rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; line-height: 1.3; }
-  .kpi-value { font-family: 'Space Mono', monospace; font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-weight: 700; line-height: 1; word-break: break-all; }
-  .kpi-card.green .kpi-value { color: var(--accent); }
-  .kpi-card.blue  .kpi-value { color: var(--accent2); }
-  .kpi-card.amber .kpi-value { color: var(--accent3); }
-  .kpi-card.red   .kpi-value { color: var(--danger); }
-  .kpi-card.purple .kpi-value { color: #8b5cf6; }
-  .kpi-sub { font-size: 0.72rem; color: var(--muted); margin-top: 6px; line-height: 1.3; }
-
-  /* CHARTS GRID */
-  .charts-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-
-  .charts-grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-  }
-
-  .chart-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 22px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .chart-card.full-width {
-    grid-column: 1 / -1;
-  }
-
-  .chart-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 18px;
-  }
-
-  .chart-title {
-    font-size: clamp(0.8rem, 1.5vw, 0.92rem);
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.35;
-    max-width: calc(100% - 80px);
-  }
-
-  .chart-subtitle {
-    font-size: 0.73rem;
-    color: var(--muted);
-    margin-top: 3px;
-  }
-
-  .chart-badge {
-    font-size: 0.7rem;
-    padding: 4px 9px;
-    border-radius: 20px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .badge-green { background: rgba(0,212,170,0.15); color: var(--accent); }
-  .badge-blue  { background: rgba(59,130,246,0.15); color: var(--accent2); }
-  .badge-amber { background: rgba(245,158,11,0.15); color: var(--accent3); }
-  .badge-red   { background: rgba(239,68,68,0.15);  color: var(--danger); }
-
-  .chart-wrap {
-    position: relative;
-  }
-
-  .chart-wrap canvas { display: block; }
-
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 20px;
-    color: var(--muted);
-    font-size: 0.75rem;
-    border-top: 1px solid var(--border);
-    margin-top: 8px;
-  }
-
-  footer span { color: var(--accent); font-family: 'Space Mono', monospace; }
-
-  /* ── RESPONSIVE ─────────────────────────────────── */
-  @media (max-width: 1100px) {
-    .kpi-row { grid-template-columns: repeat(3, 1fr); }
-    .charts-grid { grid-template-columns: 1fr; }
-    .charts-grid-3 { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 768px) {
-    header {
-      padding: 14px 16px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .header-right {
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .stat-pill { font-size: 0.72rem; padding: 5px 10px; }
-
-    .filters-bar {
-      padding: 12px 16px;
-      gap: 10px;
-    }
-    .filters-bar select {
-      font-size: 0.8rem;
-      padding: 7px 10px;
-      min-width: 130px;
-    }
-
-    main { padding: 16px; }
-
-    .kpi-row {
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .kpi-card { padding: 16px 14px; }
-    .kpi-label {
-      font-size: 0.68rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .kpi-value { font-size: 1.4rem; }
-    .kpi-sub { font-size: 0.68rem; }
-
-    .charts-grid { gap: 14px; margin-bottom: 14px; }
-    .chart-card { padding: 16px 14px; }
-    .chart-title { font-size: 0.85rem; }
-    .chart-subtitle { font-size: 0.68rem; }
-    .chart-badge { font-size: 0.65rem; padding: 3px 7px; }
-  }
-
-  @media (max-width: 480px) {
-    .logo-text { font-size: 1rem; }
-    .logo-sub { font-size: 0.65rem; }
-    .logo-icon { width: 32px; height: 32px; font-size: 16px; }
-
-    .kpi-row { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .kpi-value { font-size: 1.25rem; }
-
-    .filters-bar {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      align-items: center;
-    }
-    .filter-label { grid-column: 1 / -1; }
-    .btn-reset { grid-column: 1 / -1; width: 100%; text-align: center; }
-    .filters-bar select { width: 100%; }
-
-    footer { font-size: 0.68rem; padding: 14px; }
-  }
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .chart-grid{grid-template-columns:1fr;}
+  .hero,.filters-wrap{padding-left:20px;padding-right:20px;}
+  main{padding:28px 20px 48px;}
+  .story-footer{grid-template-columns:1fr;}
+}
+@media(max-width:560px){
+  .kpi-row{grid-template-columns:1fr 1fr;}
+  .kpi-val{font-size:1.25rem;}
+}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <div class="logo">
-    <div class="logo-icon">⚡</div>
-    <div>
-      <div class="logo-text">FlashRide</div>
-      <div class="logo-sub">Fleet Analytics Dashboard</div>
-    </div>
+<nav>
+  <div class="nav-brand">
+    <div class="bolt">⚡</div>
+    FlashRide Fleet Analytics
   </div>
-  <div class="header-right">
-    <div class="stat-pill">Records <span id="recordCount">3,000</span></div>
-    <div class="stat-pill">Zones <span>Z1–Z10</span></div>
-    <div class="stat-pill">Scooters <span id="scooterCount">—</span></div>
-  </div>
-</header>
+  <div class="nav-meta">3,000 records · Zones Z1–Z10 · Riverton City</div>
+</nav>
 
-<!-- FILTERS -->
-<div class="filters-bar">
-  <div class="filter-label">Filters</div>
-  <div class="filter-group">
-    <select id="filterZone">
-      <option value="all">All Zones</option>
-      <option value="Z1">Zone Z1</option><option value="Z2">Zone Z2</option>
-      <option value="Z3">Zone Z3</option><option value="Z4">Zone Z4</option>
-      <option value="Z5">Zone Z5</option><option value="Z6">Zone Z6</option>
-      <option value="Z7">Zone Z7</option><option value="Z8">Zone Z8</option>
-      <option value="Z9">Zone Z9</option><option value="Z10">Zone Z10</option>
-    </select>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">⚡ Operations Analytics Dashboard</div>
+    <h1>Why are scooters <em>unavailable</em><br>when customers need them?</h1>
+    <p>FlashRide scooters across Riverton show as available in the app — but customers arrive to find dead batteries. This dashboard tells the full story: where the problem is, what is causing it, and what it is costing the business.</p>
   </div>
-  <div class="filter-group">
-    <select id="filterDay">
-      <option value="all">All Days</option>
-      <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option>
-      <option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option>
-      <option value="Friday">Friday</option><option value="Saturday">Saturday</option>
-      <option value="Sunday">Sunday</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <select id="filterWeather">
-      <option value="all">All Weather</option>
-      <option value="Sunny">Sunny</option>
-      <option value="Cloudy">Cloudy</option>
-      <option value="Rainy">Rainy</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <select id="filterPeak">
-      <option value="all">All Hours</option>
-      <option value="1">Peak Hours Only</option>
-      <option value="0">Off-Peak Only</option>
-    </select>
-  </div>
-  <button class="btn-reset" id="btnReset">↺ Reset</button>
 </div>
 
-<!-- MAIN -->
+<!-- FILTERS -->
+<div class="filters-wrap">
+  <div class="filters-inner">
+    <div class="filters-row">
+      <label>Filter</label>
+      <select id="fZone"><option value="all">All Zones</option><option>Z1</option><option>Z2</option><option>Z3</option><option>Z4</option><option>Z5</option><option>Z6</option><option>Z7</option><option>Z8</option><option>Z9</option><option>Z10</option></select>
+      <select id="fDay"><option value="all">All Days</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+      <select id="fWeather"><option value="all">All Weather</option><option>Sunny</option><option>Cloudy</option><option>Rainy</option></select>
+      <select id="fPeak"><option value="all">All Hours</option><option value="1">Peak Hours Only</option><option value="0">Off-Peak Only</option></select>
+      <button class="btn-reset" onclick="resetFilters()">↺ Reset</button>
+    </div>
+  </div>
+</div>
+
 <main>
 
   <!-- KPI ROW -->
   <div class="kpi-row">
-    <div class="kpi-card green">
-      <div class="kpi-label">Avg Downtime / Scooter</div>
-      <div class="kpi-value" id="kpiAvgDowntime">—</div>
-      <div class="kpi-sub">minutes per scooter</div>
-    </div>
-    <div class="kpi-card blue">
-      <div class="kpi-label">Avg Charge Response</div>
-      <div class="kpi-value" id="kpiAvgResponse">—</div>
-      <div class="kpi-sub">minutes avg response</div>
-    </div>
-    <div class="kpi-card amber">
-      <div class="kpi-label">Unavailability Rate</div>
-      <div class="kpi-value" id="kpiUnavail">—</div>
-      <div class="kpi-sub">of fleet unavailable</div>
-    </div>
-    <div class="kpi-card red">
-      <div class="kpi-label">Low Battery Flags</div>
-      <div class="kpi-value" id="kpiLowBat">—</div>
-      <div class="kpi-sub">scooters flagged</div>
-    </div>
-    <div class="kpi-card purple">
-      <div class="kpi-label">Avg Daily Revenue</div>
-      <div class="kpi-value" id="kpiRevenue">—</div>
-      <div class="kpi-sub">per scooter avg</div>
+    <div class="kpi k1"><div class="kpi-label">Avg Downtime / Scooter</div><div class="kpi-val" id="k1">—</div><div class="kpi-sub">minutes per day</div></div>
+    <div class="kpi k2"><div class="kpi-label">Unavailability Rate</div><div class="kpi-val" id="k2">—</div><div class="kpi-sub">of fleet offline</div></div>
+    <div class="kpi k3"><div class="kpi-label">Avg Charge Response</div><div class="kpi-val" id="k3">—</div><div class="kpi-sub">minutes to respond</div></div>
+    <div class="kpi k4"><div class="kpi-label">Low Battery Alerts</div><div class="kpi-val" id="k4">—</div><div class="kpi-sub">scooters flagged</div></div>
+    <div class="kpi k5"><div class="kpi-label">Avg Daily Revenue</div><div class="kpi-val" id="k5">—</div><div class="kpi-sub">per scooter</div></div>
+  </div>
+
+  <!-- STORY FLOW INTRO -->
+  <div class="flow-intro">
+    <h2>The Story This Data Tells</h2>
+    <p>The five charts below are connected. They build a complete picture — starting with where the problem is worst, then explaining why it happens, revealing the critical threshold, and finally showing what it is costing the business in lost revenue.</p>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="dot dot-red"></span>Where is it worst?</div>
+      <div class="flow-step"><span class="dot dot-blue"></span>What is causing it?</div>
+      <div class="flow-step"><span class="dot dot-amber"></span>When does it happen?</div>
+      <div class="flow-step"><span class="dot dot-red"></span>What is the tipping point?</div>
+      <div class="flow-step"><span class="dot dot-green"></span>What is it costing?</div>
     </div>
   </div>
 
-  <!-- ROW 1: Downtime Attribution (line) + Zone Unavailability (bar) -->
-  <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-header">
-        <div>
-          <div class="chart-title">Downtime Attribution by Cause — Line Trend</div>
-          <div class="chart-subtitle">Average downtime per scooter by cause across zones</div>
-        </div>
-        <div class="chart-badge badge-green">Avg / Scooter</div>
-      </div>
-      <div class="chart-wrap"><canvas id="chartDowntimeLine" height="220"></canvas></div>
+  <!-- CHART 1: ZONE HOTSPOTS -->
+  <div class="step-connector">
+    <div class="step-num">1</div>
+    <div class="step-label">Where is the problem worst?</div>
+  </div>
+  <div class="story-card">
+    <div class="chart-area">
+      <h3>Zone Battery Unavailability Hotspots</h3>
+      <div class="chart-sub">Percentage of scooters unavailable per zone — the red bar marks the worst zone</div>
+      <canvas id="cZone" height="110"></canvas>
     </div>
-
-    <div class="chart-card">
-      <div class="chart-header">
-        <div>
-          <div class="chart-title">Zone Battery Unavailability Hotspots</div>
-          <div class="chart-subtitle">% of scooters unavailable per zone</div>
-        </div>
-        <div class="chart-badge badge-red">Hotspot</div>
+    <div class="story-footer">
+      <div class="story-text">
+        <strong>Zone Z7 has the highest unavailability in the fleet at around 17.9%</strong> — nearly 1 in 5 scooters there is offline at any time. This is not random. Z7 consistently ranks worst regardless of weather or day of week, which means it is a structural resource problem, not a temporary one. Zones Z1 and Z3 also show elevated rates and need monitoring.
       </div>
-      <div class="chart-wrap"><canvas id="chartZoneUnavail" height="220"></canvas></div>
+      <div class="action-tag red">Redeploy technicians to Z7</div>
     </div>
   </div>
 
-  <!-- ROW 2: Charge Response Impact (line) + Peak Hour Revenue (line) + Charge Response Trend -->
-  <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-header">
-        <div>
-          <div class="chart-title">Charging Response Time Impact on Avg Downtime</div>
-          <div class="chart-subtitle">Line trend: response time bins vs avg downtime per scooter (r = 0.849)</div>
-        </div>
-        <div class="chart-badge badge-blue">Correlation</div>
-      </div>
-      <div class="chart-wrap"><canvas id="chartResponseLine" height="220"></canvas></div>
+  <!-- CHART 2: RESPONSE TIME vs DOWNTIME -->
+  <div class="step-connector">
+    <div class="step-num">2</div>
+    <div class="step-label">What is causing the downtime?</div>
+  </div>
+  <div class="story-card">
+    <div class="chart-area">
+      <h3>Charging Response Time vs Average Downtime Per Scooter</h3>
+      <div class="chart-sub">Each point is a group of scooters binned by how long it took to respond to their low-battery alert</div>
+      <canvas id="cResponse" height="110"></canvas>
     </div>
-
-    <div class="chart-card">
-      <div class="chart-header">
-        <div>
-          <div class="chart-title">Peak Hour Revenue Impact — Downtime Segments</div>
-          <div class="chart-subtitle">Avg daily revenue per scooter by downtime quartile × peak status</div>
-        </div>
-        <div class="chart-badge badge-amber">Revenue</div>
+    <div class="story-footer">
+      <div class="story-text">
+        <strong>The data shows a near 1-to-1 relationship between response delay and downtime — correlation r = 0.849.</strong> Every extra minute it takes a technician to collect a low-battery scooter adds roughly one minute of downtime. The line rises steeply and consistently from left to right. This is the single most actionable finding: the operations team can directly cut downtime simply by responding faster to alerts.
       </div>
-      <div class="chart-wrap"><canvas id="chartRevenueLine" height="220"></canvas></div>
+      <div class="action-tag">Set 60-min response target</div>
     </div>
   </div>
 
-  <!-- ROW 3: Battery Level Decline Pattern (replaces Battery Health vs Maintenance) -->
-  <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-header">
-        <div>
-          <div class="chart-title">Battery Level Distribution & Availability Pattern</div>
-          <div class="chart-subtitle">Avg downtime per scooter across battery level bands — reveals availability threshold</div>
-        </div>
-        <div class="chart-badge badge-green">Pattern Analysis</div>
+  <!-- CHART 3 + 4 side by side -->
+  <div class="step-connector">
+    <div class="step-num">3</div>
+    <div class="step-label">When does it happen — and what is the tipping point?</div>
+  </div>
+  <div class="chart-grid">
+
+    <div class="story-card">
+      <div class="chart-area">
+        <h3>Downtime by Zone and Cause</h3>
+        <div class="chart-sub">Average downtime per scooter split by cause — low battery, maintenance, and unavailability</div>
+        <canvas id="cDowntime" height="180"></canvas>
       </div>
-      <div class="chart-wrap"><canvas id="chartBatteryPattern" height="220"></canvas></div>
+      <div class="story-footer">
+        <div class="story-text">
+          Across all zones, <strong>low-battery causes drive the most downtime</strong> — more than maintenance issues. Zone Z7 leads again. This confirms the problem is primarily a charging and collection workflow problem, not a hardware failure problem.
+        </div>
+        <div class="action-tag red">Battery mgmt is the priority</div>
+      </div>
     </div>
 
-    <div class="chart-card">
-      <div class="chart-header">
-        <div>
-          <div class="chart-title">Avg Downtime per Scooter by Day of Week & Weather</div>
-          <div class="chart-subtitle">Grouped line chart showing weather-day interaction effect</div>
-        </div>
-        <div class="chart-badge badge-blue">Weather × Day</div>
+    <div class="story-card">
+      <div class="chart-area">
+        <h3>Battery Level vs Availability Pattern</h3>
+        <div class="chart-sub">As battery drops below 20%, downtime spikes and availability collapses to zero</div>
+        <canvas id="cBattery" height="180"></canvas>
       </div>
-      <div class="chart-wrap"><canvas id="chartWeatherDay" height="220"></canvas></div>
+      <div class="story-footer">
+        <div class="story-text">
+          <strong>The 20% battery level is the critical threshold.</strong> Below it, downtime jumps sharply and scooter availability falls to near zero. Scooters need to be collected before they reach 20% — which means alerts should trigger at 25% to give technicians a response window.
+        </div>
+        <div class="action-tag amber">Alert at 25%, not 20%</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CHART 5: REVENUE IMPACT -->
+  <div class="step-connector">
+    <div class="step-num">4</div>
+    <div class="step-label">What is all this costing the business?</div>
+  </div>
+  <div class="story-card">
+    <div class="chart-area">
+      <h3>Peak Hour Revenue Impact — Downtime Quartiles</h3>
+      <div class="chart-sub">Average daily revenue per scooter by downtime quartile, comparing peak hours vs off-peak</div>
+      <canvas id="cRevenue" height="110"></canvas>
+    </div>
+    <div class="story-footer">
+      <div class="story-text">
+        <strong>Scooters with high downtime earn $8.18 less per day during peak hours than scooters with low downtime.</strong> Both lines — peak and off-peak — fall from left to right as downtime increases. The peak-hours line drops more steeply, meaning downtime during busy periods hurts revenue the most. Across 300 scooters, this adds up to over $2,400 in lost revenue every single peak day. The fix is not complicated: get scooters charged and available before peak hours begin, not during them.
+      </div>
+      <div class="action-tag green">$8.18 / scooter / peak day recoverable</div>
     </div>
   </div>
 
 </main>
 
 <footer>
-  FlashRide Fleet Analytics Dashboard &nbsp;|&nbsp; Saint Louis University IS Project &nbsp;|&nbsp;
-  <span>3,000</span> Records Analyzed &nbsp;|&nbsp; Zones Z1–Z10
+  <strong>FlashRide Fleet Analytics Dashboard</strong> &nbsp;·&nbsp;
+  Saint Louis University IS Project &nbsp;·&nbsp;
+  <strong>3,000</strong> records analysed across Zones Z1–Z10
 </footer>
 
 <script>
-// ============================================================
-// EMBEDDED DATASET (3000 rows parsed from PDF)
-// ============================================================
-const RAW = `SCOO180,Z4,56,78,17,19,19.24,30,147,82,1,0,TECH15,82,0,Cloudy,0,Saturday,327.08,13.13,0
+// ── DATASET ───────────────────────────────────────────────
+const RAW=`SCOO180,Z4,56,78,17,19,19.24,30,147,82,1,0,TECH15,82,0,Cloudy,0,Saturday,327.08,13.13,0
 SCOO149,Z5,28,52,12,26,14.03,167,82,138,1,0,TECH8,1,0,Sunny,1,Thursday,168.36,9.64,1
 SCOO164,Z7,62,71,15,29,20.41,179,59,210,1,0,TECH22,61,0,Rainy,0,Friday,306.15,3.8,0
 SCOO269,Z4,59,52,9,41,37.94,82,62,55,1,0,TECH17,3,1,Rainy,1,Thursday,341.46,12.32,1
@@ -3532,330 +3343,200 @@ SCOO26,Z1,26,70,10,10,7.3,22,45,13,1,0,TECH21,21,0,Sunny,0,Friday,73,10.8,0
 SCOO69,Z2,65,93,7,16,10.31,137,77,225,1,0,TECH16,118,1,Sunny,0,Saturday,72.17,4.6,0
 SCOO202,Z5,76,69,14,14,10.27,81,103,97,1,0,TECH6,46,0,Sunny,0,Thursday,143.78,11.38,0`;
 
-// Parse the dataset
-function parseData(raw) {
-  const rows = raw.trim().split('\n');
-  return rows.map(r => {
-    const f = r.split(',');
-    return {
-      scooterID: f[0],
-      zone: f[1],
-      battery: +f[2],
-      battHealth: +f[3],
-      rideCount: +f[4],
-      rideDur: +f[5],
-      rideRev: +f[6],
-      chargeResp: +f[7],
-      chargeDur: +f[8],
-      downtime: +f[9],
-      isAvail: +f[10],
-      lowBat: +f[11],
-      tech: f[12],
-      collDelay: +f[13],
-      peakHour: +f[14],
-      weather: f[15],
-      maintFlag: +f[16],
-      dayOfWeek: f[17],
-      totalRevenue: +f[18],
-      distKm: +f[19],
-      batReplace: +f[20]
+function parse(raw){
+  return raw.trim().split("\n").map(r=>{
+    const f=r.split(",");
+    return{
+      id:f[0],zone:f[1],battery:+f[2],battHealth:+f[3],
+      rideCount:+f[4],rideDur:+f[5],rideRev:+f[6],
+      chargeResp:+f[7],chargeDur:+f[8],downtime:+f[9],
+      isAvail:+f[10],lowBat:+f[11],tech:f[12],
+      collDelay:+f[13],peakHour:+f[14],weather:f[15],
+      maintFlag:+f[16],dayOfWeek:f[17],totalRev:+f[18],
+      distKm:+f[19],batReplace:+f[20]
     };
   });
 }
+const ALL=parse(RAW);
+let D=[...ALL];
 
-let ALL_DATA = parseData(RAW);
-
-
-let FILTERED = [...ALL_DATA];
-
-// ─── FILTERS ───────────────────────────────────────────────────────────────────
-function applyFilters() {
-  const z = document.getElementById('filterZone').value;
-  const d = document.getElementById('filterDay').value;
-  const w = document.getElementById('filterWeather').value;
-  const p = document.getElementById('filterPeak').value;
-
-  FILTERED = ALL_DATA.filter(r =>
-    (z === 'all' || r.zone === z) &&
-    (d === 'all' || r.dayOfWeek === d) &&
-    (w === 'all' || r.weather === w) &&
-    (p === 'all' || r.peakHour === +p)
+// ── FILTERS ───────────────────────────────────────────────
+function applyFilters(){
+  const z=document.getElementById("fZone").value;
+  const d=document.getElementById("fDay").value;
+  const w=document.getElementById("fWeather").value;
+  const p=document.getElementById("fPeak").value;
+  D=ALL.filter(r=>
+    (z==="all"||r.zone===z)&&
+    (d==="all"||r.dayOfWeek===d)&&
+    (w==="all"||r.weather===w)&&
+    (p==="all"||r.peakHour===+p)
   );
-  updateAll();
+  render();
+}
+function resetFilters(){
+  ["fZone","fDay","fWeather","fPeak"].forEach(id=>document.getElementById(id).value="all");
+  D=[...ALL];render();
+}
+["fZone","fDay","fWeather","fPeak"].forEach(id=>
+  document.getElementById(id).addEventListener("change",applyFilters)
+);
+
+// ── KPIs ─────────────────────────────────────────────────
+function renderKPIs(){
+  const n=D.length||1;
+  document.getElementById("k1").textContent=(D.reduce((a,r)=>a+r.downtime,0)/n).toFixed(1)+"m";
+  document.getElementById("k2").textContent=(D.filter(r=>r.isAvail===0).length/n*100).toFixed(1)+"%";
+  document.getElementById("k3").textContent=(D.reduce((a,r)=>a+r.chargeResp,0)/n).toFixed(0)+"m";
+  document.getElementById("k4").textContent=D.filter(r=>r.lowBat===1).length;
+  document.getElementById("k5").textContent="$"+(D.reduce((a,r)=>a+r.totalRev,0)/n).toFixed(0);
 }
 
-['filterZone','filterDay','filterWeather','filterPeak'].forEach(id => {
-  document.getElementById(id).addEventListener('change', applyFilters);
-});
-document.getElementById('btnReset').addEventListener('click', () => {
-  ['filterZone','filterDay','filterWeather','filterPeak'].forEach(id => {
-    document.getElementById(id).value = 'all';
-  });
-  applyFilters();
-});
-
-// ─── KPIs ──────────────────────────────────────────────────────────────────────
-function updateKPIs() {
-  const n = FILTERED.length;
-  if (!n) return;
-
-  const avgDown = FILTERED.reduce((a,r) => a + r.downtime, 0) / n;
-  const avgResp = FILTERED.reduce((a,r) => a + r.chargeResp, 0) / n;
-  const unavail = FILTERED.filter(r => r.isAvail === 0).length / n * 100;
-  const lowBat  = FILTERED.filter(r => r.lowBat === 1).length;
-  const avgRev  = FILTERED.reduce((a,r) => a + r.totalRevenue, 0) / n;
-  const uniqueScooters = new Set(FILTERED.map(r => r.scooterID)).size;
-
-  document.getElementById('kpiAvgDowntime').textContent = avgDown.toFixed(1) + ' m';
-  document.getElementById('kpiAvgResponse').textContent = avgResp.toFixed(1) + ' m';
-  document.getElementById('kpiUnavail').textContent     = unavail.toFixed(1) + '%';
-  document.getElementById('kpiLowBat').textContent      = lowBat.toLocaleString();
-  document.getElementById('kpiRevenue').textContent     = '$' + avgRev.toFixed(0);
-  document.getElementById('recordCount').textContent    = n.toLocaleString();
-  document.getElementById('scooterCount').textContent   = uniqueScooters;
-}
-
-// ─── CHART HELPERS ─────────────────────────────────────────────────────────────
-const CHART_DEFAULTS = {
-  plugins: { legend: { labels: { color: '#94a3b8', font: { family: 'DM Sans' } } } },
-  scales: {
-    x: { ticks: { color: '#64748b', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-    y: { ticks: { color: '#64748b', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.07)' } }
-  }
-};
-
-const CHARTS = {};
-
-function createOrUpdate(id, type, data, options) {
-  const ctx = document.getElementById(id).getContext('2d');
-  if (CHARTS[id]) { CHARTS[id].destroy(); }
-  CHARTS[id] = new Chart(ctx, { type, data, options: { ...CHART_DEFAULTS, ...options, responsive: true, maintainAspectRatio: true } });
-}
-
-// ─── CHART 1: Downtime Attribution Line (avg downtime per scooter by zone, split by cause) ─
-function buildDowntimeLine() {
-  const zones = ['Z1','Z2','Z3','Z4','Z5','Z6','Z7','Z8','Z9','Z10'];
-
-  const byZone = zones.map(z => {
-    const rows = FILTERED.filter(r => r.zone === z);
-    if (!rows.length) return { lowBat: 0, maint: 0, avail: 0 };
-    const lowBatRows  = rows.filter(r => r.lowBat === 1);
-    const maintRows   = rows.filter(r => r.maintFlag === 1);
-    const unavailRows = rows.filter(r => r.isAvail === 0);
-    return {
-      lowBat: lowBatRows.length  ? lowBatRows.reduce((a,r) => a + r.downtime, 0) / rows.length : 0,
-      maint:  maintRows.length   ? maintRows.reduce((a,r) => a + r.downtime, 0) / rows.length : 0,
-      avail:  unavailRows.length ? unavailRows.reduce((a,r) => a + r.downtime, 0) / rows.length : 0
-    };
-  });
-
-  createOrUpdate('chartDowntimeLine', 'line', {
-    labels: zones,
-    datasets: [
-      { label: 'Low Battery Cause', data: byZone.map(d => +d.lowBat.toFixed(1)), borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)', tension: 0.4, fill: true, pointBackgroundColor: '#ef4444', pointRadius: 4 },
-      { label: 'Maintenance Cause', data: byZone.map(d => +d.maint.toFixed(1)), borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', tension: 0.4, fill: true, pointBackgroundColor: '#f59e0b', pointRadius: 4 },
-      { label: 'Unavailability',    data: byZone.map(d => +d.avail.toFixed(1)), borderColor: '#00d4aa', backgroundColor: 'rgba(0,212,170,0.1)', tension: 0.4, fill: true, pointBackgroundColor: '#00d4aa', pointRadius: 4 },
-    ]
-  }, {
-    plugins: { ...CHART_DEFAULTS.plugins, tooltip: { mode: 'index', intersect: false } },
-    scales: {
-      x: { ...CHART_DEFAULTS.scales.x, title: { display: true, text: 'Zone', color: '#64748b' } },
-      y: { ...CHART_DEFAULTS.scales.y, title: { display: true, text: 'Avg Downtime / Scooter (min)', color: '#64748b' } }
+// ── CHART HELPER ─────────────────────────────────────────
+const CH={};
+const TICK={color:"#94a3b8",font:{family:"Inter",size:10}};
+const GRID={color:"rgba(0,0,0,0.05)"};
+function mk(id,type,data,opts={}){
+  if(CH[id])CH[id].destroy();
+  CH[id]=new Chart(document.getElementById(id).getContext("2d"),{
+    type,data,
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{labels:{color:"#64748b",font:{family:"Inter",size:11}}}},
+      scales:{x:{ticks:TICK,grid:GRID},y:{ticks:TICK,grid:GRID}},
+      ...opts
     }
   });
 }
 
-// ─── CHART 2: Zone Unavailability Bar ──────────────────────────────────────────
-function buildZoneUnavail() {
-  const zones = ['Z1','Z2','Z3','Z4','Z5','Z6','Z7','Z8','Z9','Z10'];
-  const pcts = zones.map(z => {
-    const rows = FILTERED.filter(r => r.zone === z);
-    if (!rows.length) return 0;
-    return +(rows.filter(r => r.isAvail === 0).length / rows.length * 100).toFixed(1);
+// ── CHART 1: ZONE ────────────────────────────────────────
+function cZone(){
+  const zones=["Z1","Z2","Z3","Z4","Z5","Z6","Z7","Z8","Z9","Z10"];
+  const pcts=zones.map(z=>{
+    const rows=D.filter(r=>r.zone===z);
+    return rows.length?(rows.filter(r=>r.isAvail===0).length/rows.length*100).toFixed(1):0;
   });
-  const maxPct = Math.max(...pcts);
-
-  createOrUpdate('chartZoneUnavail', 'bar', {
-    labels: zones,
-    datasets: [{
-      label: 'Unavailability %',
-      data: pcts,
-      backgroundColor: pcts.map(p => p === maxPct ? '#ef4444' : 'rgba(59,130,246,0.6)'),
-      borderColor: pcts.map(p => p === maxPct ? '#ef4444' : '#3b82f6'),
-      borderWidth: 1,
-      borderRadius: 6
+  const max=Math.max(...pcts.map(Number));
+  mk("cZone","bar",{
+    labels:zones,
+    datasets:[{
+      label:"Unavailability %",
+      data:pcts,
+      backgroundColor:pcts.map(p=>+p===max?"rgba(220,38,38,0.85)":"rgba(29,78,216,0.55)"),
+      borderColor:pcts.map(p=>+p===max?"#dc2626":"#1d4ed8"),
+      borderWidth:1,borderRadius:5
     }]
-  }, {
-    plugins: { ...CHART_DEFAULTS.plugins, tooltip: { callbacks: { label: ctx => `${ctx.parsed.y}% unavailable` } } },
-    scales: {
-      x: { ...CHART_DEFAULTS.scales.x },
-      y: { ...CHART_DEFAULTS.scales.y, title: { display: true, text: '% Unavailable', color: '#64748b' }, max: Math.ceil(maxPct * 1.2) }
+  },{
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.y}% unavailable`}}},
+    scales:{
+      x:{ticks:TICK,grid:{display:false}},
+      y:{ticks:TICK,grid:GRID,title:{display:true,text:"% Unavailable",color:"#94a3b8",font:{size:10}}}
     }
   });
 }
 
-// ─── CHART 3: Charge Response Impact (line, binned) ────────────────────────────
-function buildResponseLine() {
-  const bins = [[0,30],[30,60],[60,90],[90,120],[120,150],[150,180],[180,210],[210,240],[240,270],[270,300]];
-  const labels = bins.map(b => `${b[0]}-${b[1]}`);
-  const data = bins.map(b => {
-    const rows = FILTERED.filter(r => r.chargeResp >= b[0] && r.chargeResp < b[1]);
-    return rows.length ? +(rows.reduce((a,r) => a + r.downtime, 0) / rows.length).toFixed(1) : null;
+// ── CHART 2: RESPONSE vs DOWNTIME ────────────────────────
+function cResponse(){
+  const bins=[[0,30],[30,60],[60,90],[90,120],[120,150],[150,180],[180,210],[210,240],[240,270],[270,301]];
+  const labels=bins.map(b=>`${b[0]}–${b[1]}`);
+  const avgs=bins.map(([a,b])=>{
+    const rows=D.filter(r=>r.chargeResp>=a&&r.chargeResp<b);
+    return rows.length?(rows.reduce((s,r)=>s+r.downtime,0)/rows.length).toFixed(1):null;
   });
-
-  createOrUpdate('chartResponseLine', 'line', {
+  mk("cResponse","line",{
     labels,
-    datasets: [{
-      label: 'Avg Downtime / Scooter (min)',
-      data,
-      borderColor: '#3b82f6',
-      backgroundColor: 'rgba(59,130,246,0.15)',
-      tension: 0.4, fill: true,
-      pointBackgroundColor: '#3b82f6',
-      pointRadius: 5,
-      spanGaps: true
+    datasets:[{
+      label:"Avg Downtime / Scooter (min)",
+      data:avgs,
+      borderColor:"#1d4ed8",
+      backgroundColor:"rgba(29,78,216,0.08)",
+      tension:0.4,fill:true,
+      pointBackgroundColor:"#1d4ed8",pointRadius:5,spanGaps:true
     }]
-  }, {
-    plugins: { ...CHART_DEFAULTS.plugins, annotation: {} },
-    scales: {
-      x: { ...CHART_DEFAULTS.scales.x, title: { display: true, text: 'Charge Response Time Bin (min)', color: '#64748b' } },
-      y: { ...CHART_DEFAULTS.scales.y, title: { display: true, text: 'Avg Downtime / Scooter (min)', color: '#64748b' } }
+  },{
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:TICK,grid:GRID,title:{display:true,text:"Charge Response Time (min)",color:"#94a3b8",font:{size:10}}},
+      y:{ticks:TICK,grid:GRID,title:{display:true,text:"Avg Downtime (min)",color:"#94a3b8",font:{size:10}}}
     }
   });
 }
 
-// ─── CHART 4: Revenue by Downtime Quartile × Peak (line) ───────────────────────
-function buildRevenueLine() {
-  // Compute downtime quartiles
-  const sorted = [...FILTERED].sort((a,b) => a.downtime - b.downtime);
-  const q1 = sorted[Math.floor(sorted.length * 0.25)]?.downtime || 0;
-  const q2 = sorted[Math.floor(sorted.length * 0.5)]?.downtime  || 0;
-  const q3 = sorted[Math.floor(sorted.length * 0.75)]?.downtime || 0;
-
-  const getQ = dt => dt <= q1 ? 'Q1 (Low)' : dt <= q2 ? 'Q2' : dt <= q3 ? 'Q3' : 'Q4 (High)';
-  const qLabels = ['Q1 (Low)', 'Q2', 'Q3', 'Q4 (High)'];
-
-  const peak = qLabels.map(q => {
-    const rows = FILTERED.filter(r => r.peakHour === 1 && getQ(r.downtime) === q);
-    return rows.length ? +(rows.reduce((a,r) => a + r.totalRevenue, 0) / rows.length).toFixed(2) : null;
-  });
-  const offPeak = qLabels.map(q => {
-    const rows = FILTERED.filter(r => r.peakHour === 0 && getQ(r.downtime) === q);
-    return rows.length ? +(rows.reduce((a,r) => a + r.totalRevenue, 0) / rows.length).toFixed(2) : null;
-  });
-
-  createOrUpdate('chartRevenueLine', 'line', {
-    labels: qLabels,
-    datasets: [
-      { label: 'Peak Hours', data: peak, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.15)', tension: 0.4, fill: true, pointBackgroundColor: '#f59e0b', pointRadius: 6, spanGaps: true },
-      { label: 'Off-Peak',   data: offPeak, borderColor: '#8b5cf6', backgroundColor: 'rgba(139,92,246,0.1)', tension: 0.4, fill: true, pointBackgroundColor: '#8b5cf6', pointRadius: 6, spanGaps: true }
+// ── CHART 3: DOWNTIME BY ZONE AND CAUSE ──────────────────
+function cDowntime(){
+  const zones=["Z1","Z2","Z3","Z4","Z5","Z6","Z7","Z8","Z9","Z10"];
+  const lb=zones.map(z=>{const all=D.filter(r=>r.zone===z);return all.length?(all.filter(r=>r.lowBat===1).reduce((s,r)=>s+r.downtime,0)/all.length).toFixed(1):0;});
+  const mf=zones.map(z=>{const all=D.filter(r=>r.zone===z);return all.length?(all.filter(r=>r.maintFlag===1).reduce((s,r)=>s+r.downtime,0)/all.length).toFixed(1):0;});
+  const ua=zones.map(z=>{const all=D.filter(r=>r.zone===z);return all.length?(all.filter(r=>r.isAvail===0).reduce((s,r)=>s+r.downtime,0)/all.length).toFixed(1):0;});
+  mk("cDowntime","line",{
+    labels:zones,
+    datasets:[
+      {label:"Low Battery",data:lb,borderColor:"#dc2626",tension:0.4,pointRadius:4,pointBackgroundColor:"#dc2626",fill:false},
+      {label:"Maintenance",data:mf,borderColor:"#d97706",tension:0.4,pointRadius:4,pointBackgroundColor:"#d97706",fill:false},
+      {label:"Unavailability",data:ua,borderColor:"#7c3aed",tension:0.4,pointRadius:4,pointBackgroundColor:"#7c3aed",fill:false}
     ]
-  }, {
-    plugins: { ...CHART_DEFAULTS.plugins, tooltip: { callbacks: { label: ctx => `$${ctx.parsed.y?.toFixed(2)} avg revenue` } } },
-    scales: {
-      x: { ...CHART_DEFAULTS.scales.x, title: { display: true, text: 'Downtime Quartile', color: '#64748b' } },
-      y: { ...CHART_DEFAULTS.scales.y, title: { display: true, text: 'Avg Daily Revenue ($)', color: '#64748b' } }
+  },{
+    plugins:{legend:{labels:{color:"#64748b",font:{family:"Inter",size:10}}},tooltip:{mode:"index",intersect:false}},
+    scales:{
+      x:{ticks:TICK,grid:GRID},
+      y:{ticks:TICK,grid:GRID,title:{display:true,text:"Avg Downtime / Scooter",color:"#94a3b8",font:{size:10}}}
     }
   });
 }
 
-// ─── CHART 5: Battery Level Pattern (replaces Battery Health vs Maintenance) ───
-// Shows avg downtime per scooter across battery level bands — reveals threshold
-function buildBatteryPattern() {
-  const bands = [[5,20],[20,35],[35,50],[50,65],[65,80],[80,95],[95,100]];
-  const labels = bands.map(b => `${b[0]}-${b[1]}%`);
-
-  const avgDown = bands.map(b => {
-    const rows = FILTERED.filter(r => r.battery >= b[0] && r.battery < b[1]);
-    return rows.length ? +(rows.reduce((a,r) => a + r.downtime, 0) / rows.length).toFixed(1) : null;
-  });
-  const availRate = bands.map(b => {
-    const rows = FILTERED.filter(r => r.battery >= b[0] && r.battery < b[1]);
-    return rows.length ? +(rows.filter(r => r.isAvail === 1).length / rows.length * 100).toFixed(1) : null;
-  });
-
-  createOrUpdate('chartBatteryPattern', 'line', {
+// ── CHART 4: BATTERY PATTERN ─────────────────────────────
+function cBattery(){
+  const bands=[[5,20],[20,35],[35,50],[50,65],[65,80],[80,95],[95,101]];
+  const labels=bands.map(b=>`${b[0]}–${b[1]}%`);
+  const dt=bands.map(([a,b])=>{const rows=D.filter(r=>r.battery>=a&&r.battery<b);return rows.length?(rows.reduce((s,r)=>s+r.downtime,0)/rows.length).toFixed(1):null;});
+  const av=bands.map(([a,b])=>{const rows=D.filter(r=>r.battery>=a&&r.battery<b);return rows.length?(rows.filter(r=>r.isAvail===1).length/rows.length*100).toFixed(1):null;});
+  mk("cBattery","line",{
     labels,
-    datasets: [
-      {
-        label: 'Avg Downtime / Scooter (min)',
-        data: avgDown,
-        borderColor: '#ef4444',
-        backgroundColor: 'rgba(239,68,68,0.12)',
-        tension: 0.4, fill: true,
-        pointBackgroundColor: '#ef4444',
-        pointRadius: 5,
-        yAxisID: 'y',
-        spanGaps: true
-      },
-      {
-        label: 'Availability Rate (%)',
-        data: availRate,
-        borderColor: '#00d4aa',
-        backgroundColor: 'rgba(0,212,170,0.08)',
-        tension: 0.4, fill: false,
-        borderDash: [5,3],
-        pointBackgroundColor: '#00d4aa',
-        pointRadius: 5,
-        yAxisID: 'y2',
-        spanGaps: true
-      }
+    datasets:[
+      {label:"Avg Downtime (min)",data:dt,borderColor:"#dc2626",backgroundColor:"rgba(220,38,38,0.07)",tension:0.4,fill:true,pointBackgroundColor:"#dc2626",pointRadius:5,spanGaps:true,yAxisID:"y"},
+      {label:"Availability Rate (%)",data:av,borderColor:"#059669",borderDash:[5,4],tension:0.4,fill:false,pointBackgroundColor:"#059669",pointRadius:5,spanGaps:true,yAxisID:"y2"}
     ]
-  }, {
-    plugins: { ...CHART_DEFAULTS.plugins, tooltip: { mode: 'index', intersect: false } },
-    scales: {
-      x: { ...CHART_DEFAULTS.scales.x, title: { display: true, text: 'Battery Level Band', color: '#64748b' } },
-      y: { ...CHART_DEFAULTS.scales.y, title: { display: true, text: 'Avg Downtime (min)', color: '#64748b' }, position: 'left' },
-      y2: { ...CHART_DEFAULTS.scales.y, title: { display: true, text: 'Availability Rate (%)', color: '#64748b' }, position: 'right', grid: { drawOnChartArea: false }, min: 0, max: 100 }
+  },{
+    plugins:{legend:{labels:{color:"#64748b",font:{family:"Inter",size:10}}},tooltip:{mode:"index",intersect:false}},
+    scales:{
+      x:{ticks:TICK,grid:GRID},
+      y:{ticks:TICK,grid:GRID,title:{display:true,text:"Downtime (min)",color:"#94a3b8",font:{size:10}},position:"left"},
+      y2:{ticks:TICK,grid:{drawOnChartArea:false},title:{display:true,text:"Availability %",color:"#94a3b8",font:{size:10}},position:"right",min:0,max:100}
     }
   });
 }
 
-// ─── CHART 6: Weather × Day avg downtime line ───────────────────────────────────
-function buildWeatherDay() {
-  const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-  const weathers = ['Sunny','Cloudy','Rainy'];
-  const colors = { Sunny: '#f59e0b', Cloudy: '#3b82f6', Rainy: '#00d4aa' };
-
-  const datasets = weathers.map(w => ({
-    label: w,
-    data: days.map(d => {
-      const rows = FILTERED.filter(r => r.dayOfWeek === d && r.weather === w);
-      return rows.length ? +(rows.reduce((a,r) => a + r.downtime, 0) / rows.length).toFixed(1) : null;
-    }),
-    borderColor: colors[w],
-    backgroundColor: colors[w] + '22',
-    tension: 0.4, fill: false,
-    pointBackgroundColor: colors[w],
-    pointRadius: 5,
-    spanGaps: true
-  }));
-
-  createOrUpdate('chartWeatherDay', 'line', {
-    labels: days.map(d => d.slice(0,3)),
-    datasets
-  }, {
-    plugins: { ...CHART_DEFAULTS.plugins, tooltip: { mode: 'index', intersect: false } },
-    scales: {
-      x: { ...CHART_DEFAULTS.scales.x, title: { display: true, text: 'Day of Week', color: '#64748b' } },
-      y: { ...CHART_DEFAULTS.scales.y, title: { display: true, text: 'Avg Downtime / Scooter (min)', color: '#64748b' } }
+// ── CHART 5: REVENUE ─────────────────────────────────────
+function cRevenue(){
+  const sorted=[...D].sort((a,b)=>a.downtime-b.downtime);
+  const q1=sorted[Math.floor(sorted.length*0.25)]?.downtime||0;
+  const q2=sorted[Math.floor(sorted.length*0.5)]?.downtime||0;
+  const q3=sorted[Math.floor(sorted.length*0.75)]?.downtime||0;
+  const getQ=dt=>dt<=q1?"Q1 — Low":dt<=q2?"Q2":dt<=q3?"Q3":"Q4 — High";
+  const ql=["Q1 — Low","Q2","Q3","Q4 — High"];
+  const peak=ql.map(q=>{const rows=D.filter(r=>r.peakHour===1&&getQ(r.downtime)===q);return rows.length?(rows.reduce((s,r)=>s+r.totalRev,0)/rows.length).toFixed(2):null;});
+  const off=ql.map(q=>{const rows=D.filter(r=>r.peakHour===0&&getQ(r.downtime)===q);return rows.length?(rows.reduce((s,r)=>s+r.totalRev,0)/rows.length).toFixed(2):null;});
+  mk("cRevenue","line",{
+    labels:ql,
+    datasets:[
+      {label:"Peak Hours",data:peak,borderColor:"#d97706",backgroundColor:"rgba(217,119,6,0.08)",tension:0.4,fill:true,pointBackgroundColor:"#d97706",pointRadius:6,spanGaps:true},
+      {label:"Off-Peak",data:off,borderColor:"#7c3aed",backgroundColor:"rgba(124,58,237,0.06)",tension:0.4,fill:true,pointBackgroundColor:"#7c3aed",pointRadius:6,spanGaps:true}
+    ]
+  },{
+    plugins:{legend:{labels:{color:"#64748b",font:{family:"Inter",size:11}}},tooltip:{mode:"index",intersect:false,callbacks:{label:c=>`$${c.parsed.y} avg revenue`}}},
+    scales:{
+      x:{ticks:TICK,grid:GRID},
+      y:{ticks:TICK,grid:GRID,title:{display:true,text:"Avg Daily Revenue ($)",color:"#94a3b8",font:{size:10}}}
     }
   });
 }
 
-// ─── UPDATE ALL ─────────────────────────────────────────────────────────────────
-function updateAll() {
-  updateKPIs();
-  buildDowntimeLine();
-  buildZoneUnavail();
-  buildResponseLine();
-  buildRevenueLine();
-  buildBatteryPattern();
-  buildWeatherDay();
+// ── RENDER ALL ────────────────────────────────────────────
+function render(){
+  renderKPIs();
+  cZone();cResponse();cDowntime();cBattery();cRevenue();
 }
-
-// Init
-updateAll();
+render();
 </script>
 </body>
 </html>
